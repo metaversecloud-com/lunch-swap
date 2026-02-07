@@ -46,7 +46,7 @@ I'll check recent git history and use `/remembering-conversations` to get back u
 
 ## Project Context
 
-- **App**: Lunch Swap — Topia SDK interactive app (React + TypeScript client, Node + Express server)
+- **App**: Topia SDK interactive app (React + TypeScript client, Node + Express server)
 - **Audience**: Ages 7–17. Interfaces must be memorable, easy to understand, and engaging for kids and teens.
 - **SDK**: `@rtsdk/topia` (v0.17.7) — [SDK Docs](https://metaversecloud-com.github.io/mc-sdk-js/index.html)
 - **Monorepo**: npm workspaces — `client/`, `server/`, `shared/`
@@ -261,7 +261,9 @@ Run `npm run setup` to configure `.env` interactively. In dev mode with `API_KEY
 | CSS class reference | `.ai/style-guide.md` |
 | Base rules (detailed) | `.ai/rules.md` |
 | Checklists | `.ai/checklists/` |
+| SDK compatibility fix log | `.ai/checklists/sdk-compatibility-log.md` |
 | 12 production app analyses | `.ai/apps/` |
+| App analysis tracker | `.ai/apps/tracker.md` |
 
 Always reference `.ai/` documentation before starting implementation.
 
@@ -282,6 +284,18 @@ When you create a **novel pattern, utility, or workflow** during development tha
 2. **Update indexes** → Add the new file to `examples/README.md`, `skills/README.md`, or the relevant index, and update cross-references in `CLAUDE.md` and `decision-tree.md`
 3. **PR to the boilerplate repo** → Clone/fork `metaversecloud-com/sdk-ai-advanced-boilerplate`, add the new file(s) to the matching `.ai/` path, update its indexes, and open a pull request. Title format: `Add [type]: [name]` (e.g., `Add example: vote-reversal.md`, `Add skill: add-leaderboard.md`).
 
+### Pull Request Descriptions — Always Complete
+
+When creating or updating a pull request — to the boilerplate repo, the SDK, or **any** repository — you MUST fill in every section of the PR description template completely. No empty sections, no placeholder text. If a repo has a PR template, fill in every field. If it doesn't, include at minimum:
+
+- **Summary** — What changed and why (1–3 bullet points)
+- **What kind of change** — New feature, bug fix, docs, refactor, etc.
+- **Current vs. new behavior** — What was happening before and what happens now
+- **Breaking changes** — Explicitly state whether this is breaking and what's affected
+- **Details** — Files changed, design decisions, anything a reviewer needs to know
+
+A PR with empty template sections is not ready to submit.
+
 Example header format (add to top of every new `.ai/examples/*.md`):
 ```
 > **Source**: [app name(s)]
@@ -301,12 +315,14 @@ File issues at https://github.com/metaversecloud-com/mc-sdk-js/issues to request
 
 **2. During development** — When you hit SDK friction, work around a limitation, or write boilerplate that the SDK should handle, file a request with the concrete use case and a proposed API that would have made it seamless.
 
-Each issue should include:
+Each issue MUST be thorough and descriptive — no vague one-liners. Include all of the following:
 - **Summary**: What's missing and why it matters (developer experience, user attrition, etc.)
 - **Proposed API**: Method signatures, type definitions, and which class/factory they belong to
 - **Usage pattern**: A concrete code example showing the before (current workaround) and after (with the new capability)
 - **Security model**: Auth requirements and scoping
 - **Implementation suggestion**: Proposed REST endpoints and SDK-side implementation
+
+A well-written issue gets prioritized faster. The reader should fully understand the problem, the proposed solution, and the impact without needing to ask follow-up questions.
 
 Draft issues in `.ai/drafts/` before filing. Use `gh issue create -R metaversecloud-com/mc-sdk-js` to submit.
 
@@ -322,3 +338,14 @@ Periodically pull updates from the central boilerplate repo to keep this app's `
    - Does the app already have this functionality?
    - If it's a good fit, consider implementing it using the corresponding skill runbook
 5. **Report** → Summarize what was synced, what's new, and whether any new features are worth adding
+
+### Scan SDK Apps for Updates (Periodic)
+
+Use `.ai/apps/tracker.md` to track when each app in the `metaversecloud-com` org was last analyzed. Periodically scan for new commits and re-analyze apps that have changed.
+
+1. **Check for updates** → For each analyzed app, run `gh api repos/metaversecloud-com/{repo}/commits?per_page=1` and compare against `last_commit` in the tracker.
+2. **Re-analyze changed apps** → Clone/fetch repos with new commits. Update the corresponding `.ai/apps/{name}.md` analysis file. Extract any new patterns as examples, templates, or skills.
+3. **Analyze new repos** → Check the "Not Yet Analyzed" section of the tracker. Prioritize high-priority repos. Create a new `.ai/apps/{name}.md` for each.
+4. **Validate against SDK docs** → When extracting code patterns, verify all SDK method signatures against `.ai/apps/sdk-reference.md`. Fix any issues before adding to examples.
+5. **Update the tracker** → Set `last_analyzed` date and `last_commit` hash. Log the scan in the Scan Log table.
+6. **Report** → Summarize what changed, what new patterns were found, and what examples/skills were added or updated.
