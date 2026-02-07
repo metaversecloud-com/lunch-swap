@@ -60,6 +60,29 @@ Or install individually with `npx skills add <package>`:
 | **theme-factory** | `npx skills add @anthropic/theme-factory` | Apply cohesive color palettes and font pairings. Use as a starting point before `/frontend-design` to establish a color foundation for game UI. |
 | **accessibility-compliance** | `npx skills add @anthropic/accessibility-compliance` | WCAG 2.2 compliance, ARIA patterns, mobile accessibility, inclusive design. **Required** — all UI must target WCAG 2.2 AA. |
 
+## Game Development Skills
+
+For game mechanics, state machines, and real-time game patterns. Useful now for architectural patterns and increasingly relevant as the app evolves toward in-canvas gameplay.
+
+| Skill | Install | Why |
+|-------|---------|-----|
+| **game-development** | `npx skills add sickn33/antigravity-awesome-skills --skill game-development` | Core game dev principles — state machines, observer/event patterns, object pooling, AI behavior trees, collision detection. Orchestrator skill that routes to specialized sub-skills. |
+
+### Relevance to Lunch Swap by Pattern
+
+| Pattern | Useful Now? | When It Applies |
+|---------|-------------|-----------------|
+| **State Machine** | Yes | Game flow: `NEW_DAY → PLAYING → MEAL_COMPLETE → DONE_FOR_DAY`. Clean state transitions for player lifecycle. |
+| **Observer/Events** | Yes | Pickup → update bag → check completion → trigger rewards chain. Cross-system communication. |
+| **Object Pooling** | Future | Food Fight mode — frequent spawn/destroy of projectiles and effects in real-time gameplay. |
+| **ECS (Entity Component System)** | Future | If item count scales to hundreds+ per world, ECS patterns help manage entity updates efficiently. |
+| **Behavior Trees** | Future | NPC AI — complex decision-making for curriculum-aware NPCs that drop items, respond to players, and adapt behavior. |
+| **Collision Detection** | Future | Food Fight dodgeball — AABB/circle collision for projectile hits. In-canvas games via Topia Game Engine. |
+| **Input Abstraction** | Future | When adding Unity, Pixi, Phaser, BabylonJS, or Three.js games into the iframe — multi-platform input mapping. |
+| **Game Loop (60 FPS)** | Future | Real-time in-canvas games (Food Fight) via Topia Game Engine or embedded game frameworks. |
+
+> **Note**: This skill is most valuable when building real-time, frame-driven gameplay. Lunch Swap V1 is event-driven (web app with game mechanics), so state machine and observer patterns apply now. The remaining patterns become critical for Food Fight mode and any in-canvas game engine integrations.
+
 ## Animation & Video Skills
 
 For in-app animations (celebrations, micro-interactions, feedback) and server-side video generation (canvas video assets).
