@@ -1,5 +1,5 @@
 import express from "express";
-import { handleGetGameState, handleGetNearbyItems, handlePickupItem } from "./controllers/index.js";
+import { handleGetGameState, handleGetNearbyItems, handlePickupItem, handleDropItem, handleSwapItem, handleSubmitMeal } from "./controllers/index.js";
 import { getVersion } from "./utils/getVersion.js";
 import { requireDevMode } from "./middleware/requireDevMode.js";
 import devRouter from "./routes.dev.js";
@@ -28,6 +28,9 @@ router.get("/system/health", (req, res) => {
 router.get("/game-state", handleGetGameState);
 router.get("/nearby-items", handleGetNearbyItems);
 router.post("/pickup-item", handlePickupItem);
+router.post("/drop-item", handleDropItem);
+router.post("/swap-item", handleSwapItem);
+router.post("/submit-meal", handleSubmitMeal);
 
 // Dev routes — only available in development with API_KEY configured
 if (process.env.NODE_ENV === "development" && process.env.API_KEY) {
