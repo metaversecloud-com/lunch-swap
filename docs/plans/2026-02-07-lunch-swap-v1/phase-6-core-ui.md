@@ -39,7 +39,7 @@ git commit -m "feat: add GameView container with conditional rendering"
 - Create: `client/src/components/NewDayWelcome.tsx`
 - Modify: `client/src/components/index.ts`
 
-Shows: "New Day!" header, today's ideal meal preview (5 items with food group colors), starting brown bag contents (matching item highlighted), "Let's Go!" button to dismiss.
+Shows: "New Day!" header, today's ideal meal preview (5 target items with food group colors), starting brown bag contents (8 items, matching item highlighted), "Let's Go!" button to dismiss.
 
 Use SDK CSS classes: `container`, `h1`, `h2`, `p1`, `btn`. Food group color borders from `FOOD_GROUP_COLORS`. Accessible: heading hierarchy, button focus, reduced motion support.
 
@@ -88,7 +88,7 @@ git commit -m "feat: add IdealMealTracker component"
 
 Props: `item: BagItem | null`, `onDrop: (itemId: string) => void`, `expanded: boolean`, `onToggle: () => void`
 
-**BrownBag**: 5-slot grid. Maps bag items to `BagItemCard` components. Manages which card is expanded (only one at a time). Empty slots shown for positions < 5.
+**BrownBag**: 8-slot grid (bag capacity: 8). Maps bag items to `BagItemCard` components. Manages which card is expanded (only one at a time). Empty slots shown for positions < 8.
 
 Props: `onDrop: (itemId: string) => void`
 

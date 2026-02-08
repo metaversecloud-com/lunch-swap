@@ -39,7 +39,7 @@
 interface GameStateNewDayResponse {
   success: true;
   isNewDay: true;
-  brownBag: BagItem[];                 // 5 items, 1 matching ideal meal
+  brownBag: BagItem[];                 // 8 items, 1 matching ideal meal
   idealMeal: IdealMealItem[];          // 5 items: 1 drink, 1 main, 3 from fruit/veggie/snack
   completedToday: false;
   nutritionScore: null;
@@ -164,7 +164,7 @@ interface PickupConflictResponse {
 // HTTP 400
 interface PickupBagFullResponse {
   success: false;
-  error: "Bag is full. Drop an item first or use swap.";
+  error: "Bag is full (8/8). Drop an item first or use swap.";
 }
 ```
 

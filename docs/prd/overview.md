@@ -10,7 +10,7 @@ A daily social trading game where players collect, swap, and assemble food items
 
 ## Core Concept
 
-Every day, players receive a randomized "brown bag" of 5 food items and a unique "ideal meal" target. Only 1 of their starting items matches their ideal meal — so they must explore the world, drop items they don't need, and pick up items others have left behind. The game creates natural social interaction through scarcity: you *need* other players to complete your meal. On submission, meals are scored for nutritional balance, teaching kids about healthy eating through gameplay rather than quizzes. Daily resets keep the loop fresh and create anticipation.
+Every day, players receive a randomized "brown bag" of 8 food items and a unique "ideal meal" target (5 items). Only 1 of their starting items matches their ideal meal — so they must explore the world, drop items they don't need, and pick up items others have left behind. The game creates natural social interaction through scarcity: you *need* other players to complete your meal. On submission, meals are scored for nutritional balance, teaching kids about healthy eating through gameplay rather than quizzes. Daily resets keep the loop fresh and create anticipation.
 
 ## Target Audience
 
@@ -19,7 +19,7 @@ Every day, players receive a randomized "brown bag" of 5 food items and a unique
 
 ## Key Differentiators
 
-- **Forced social interaction through game mechanics** — Scarcity (5 slots, 1 match) means players must engage with each other, not just the system
+- **Forced social interaction through game mechanics** — Scarcity (8 bag slots, 5-item meal, 1 starting match) means players must engage with each other, not just the system
 - **Educational without feeling educational** — Food group color coding, nutrition scoring, "Did you know?" facts, and Super Combos teach healthy eating passively
 - **Daily reset with progression** — Each day is a fresh puzzle, but XP, badges, and streaks carry over for long-term engagement
 - **Asymmetric knowledge** — Each player's ideal meal is unique, creating natural negotiation and discovery even in worlds without chat
@@ -49,12 +49,12 @@ Every day, players receive a randomized "brown bag" of 5 food items and a unique
 
 ### In Scope (V1)
 
-- Daily start/join flow with randomized brown bag (5 items) and ideal meal
+- Daily start/join flow with randomized brown bag (8 items) and ideal meal
 - Resume same-day session with preserved state
 - Drop items into world (public, anyone can pick up)
 - Pick up items from world (click-to-open-drawer or nearby list in drawer)
 - Auto-Grab Mode toggle for quick collection
-- Bag capacity enforcement (5 items) with swap-out flow when full
+- Bag capacity enforcement (8 items) with swap-out flow when full
 - Rarity system: Common, Rare, Epic (Legendary teased, not available)
 - Meal composition: 1 drink + 1 main + 3 from {fruit, veggie, snack}
 - Nutrition scoring on meal submission (bonus XP for balanced meals)

@@ -31,7 +31,7 @@
   - Polling: `GET /api/nearby-items` every 3 seconds while drawer is open
   - Cached from: `GlobalContext.gameState`
 - **User actions**:
-  - View Brown Bag: See 5 item slots with food group colors and rarity badges
+  - View Brown Bag: See 8 item slots with food group colors and rarity badges
   - View Ideal Meal: See 5 target items with collected/missing status
   - Tap bag item: Expand item detail (nutrition preview, "Drop" button)
   - Tap "Drop": Drop item from bag into world → `POST /api/drop-item`
@@ -115,7 +115,7 @@
 ### Modal: Bag Full Swap
 
 - **Trigger**: Player attempts pickup when bag has 5 items
-- **Content**: "Bag is full!" header. Shows current 5 bag items as tappable cards (food group colored). Prompt: "Choose an item to drop, or cancel."
+- **Content**: "Bag is full!" header. Shows current 8 bag items as tappable cards (food group colored). Prompt: "Choose an item to drop, or cancel."
 - **Actions**:
   - Tap item to drop: Highlights item red, shows "Confirm swap?" → `POST /api/swap-item` with dropItemId + pickupDroppedAssetId. On success: both particle effects, bag updates, modal closes.
   - Cancel: Close modal, food item remains in world, bag unchanged.
@@ -177,7 +177,7 @@
 | Network failure | Error banner: "Something went wrong. Try again!" | Retry button re-fetches game state |
 | Invalid credentials | "Session expired. Please reopen the app." | User must click key asset again |
 | Item already picked up | Toast: "Someone already grabbed that one!" | Dismiss toast, try another item |
-| Bag full (unexpected) | "Bag is full! Drop an item first." | Shows swap flow |
+| Bag full (unexpected) | "Bag is full (8/8)! Drop an item first." | Shows swap flow |
 | Meal validation failure | "Your meal isn't complete yet." + list of missing items | Dismiss, continue collecting |
 | Admin action failure | Toast: "Action failed. Please try again." | Retry |
 
@@ -186,14 +186,14 @@
 | Context | What User Sees | Call to Action |
 |---------|---------------|---------------|
 | No nearby items | Illustration + "No food nearby. Keep exploring!" | Encourage walking around the world |
-| Bag empty (edge case) | 5 empty slot outlines + "Your bag is empty. Go find some food!" | Encourage exploring |
+| Bag empty (edge case) | 8 empty slot outlines + "Your bag is empty. Go find some food!" | Encourage exploring |
 | No items in world (admin view) | Stats show 0 items + "No food in the world yet." | "Spawn Items" button prominent |
 
 ## Key UI Components
 
 ### BrownBag
 
-5-slot grid showing current inventory. Each slot:
+8-slot grid showing current inventory (bag capacity: 8, ideal meal: 5). Each slot:
 - Food item image (from asset)
 - Item name
 - Food group color-coded border/badge

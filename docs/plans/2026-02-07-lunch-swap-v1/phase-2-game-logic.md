@@ -50,10 +50,10 @@ describe("generateIdealMeal", () => {
 });
 
 describe("generateBrownBag", () => {
-  test("returns 5 items with exactly 1 matching the ideal meal", () => {
+  test("returns 8 items with exactly 1 matching the ideal meal", () => {
     const idealMeal = generateIdealMeal();
     const bag = generateBrownBag(idealMeal);
-    expect(bag).toHaveLength(5);
+    expect(bag).toHaveLength(8);
     const matches = bag.filter(i => i.matchesIdealMeal);
     expect(matches).toHaveLength(1);
   });
@@ -168,9 +168,9 @@ export function generateBrownBag(idealMeal: IdealMealItem[]): BagItem[] {
   const idealIds = new Set(idealMeal.map(i => i.itemId));
   const nonIdealPool = FOOD_ITEMS.filter(i => !idealIds.has(i.itemId));
 
-  // Pick 4 random non-ideal items
+  // Pick 7 random non-ideal items (bag capacity 8, minus 1 match)
   const shuffled = [...nonIdealPool].sort(() => Math.random() - 0.5);
-  const fillers = shuffled.slice(0, 4);
+  const fillers = shuffled.slice(0, 7);
 
   const bag: BagItem[] = [
     { itemId: matchItem.itemId, name: matchItem.name, foodGroup: matchItem.foodGroup, rarity: matchItem.rarity, matchesIdealMeal: true },

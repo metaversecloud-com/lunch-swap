@@ -23,7 +23,7 @@
 interface VisitorDataObject {
   // Daily state
   lastPlayedDate: string;              // "YYYY-MM-DD" in Mountain Time
-  brownBag: BagItem[];                 // Current inventory (max 5 items)
+  brownBag: BagItem[];                 // Current inventory (max 8 items)
   idealMeal: IdealMealItem[];          // Today's target meal (always 5 items)
   completedToday: boolean;             // Whether meal was submitted today
   completionTimestamp: string | null;   // ISO timestamp of today's completion
@@ -381,7 +381,7 @@ On GET /api/game-state:
   2. Compare to visitor.dataObject.lastPlayedDate
   3. If different:
      a. Generate new ideal meal (1 drink + 1 main + 3 from {fruit, veggie, snack})
-     b. Generate new brown bag (5 random items, exactly 1 matching ideal meal)
+     b. Generate new brown bag (8 random items, exactly 1 matching ideal meal)
      c. Reset daily state (completedToday, pickupsToday, dropsToday, etc.)
      d. Update lastPlayedDate = currentDateMT
      e. Spawn items into world (based on rarity multipliers, anti-spam check)

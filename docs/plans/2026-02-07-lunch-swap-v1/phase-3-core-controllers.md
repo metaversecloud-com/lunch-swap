@@ -111,7 +111,7 @@ git commit -m "feat: add GET /api/nearby-items controller"
 
 Test scenarios:
 - Successful pickup: item removed from world, added to bag, returns updated bag + fun fact + XP
-- Bag full (5 items): returns 400
+- Bag full (8 items): returns 400
 - Item already gone (409 conflict)
 - Item matches ideal meal: returns `matchesIdealMeal: true`
 - XP includes rarity multiplier
@@ -197,7 +197,7 @@ git commit -m "feat: add POST /api/drop-item controller"
 **Step 1: Write failing tests**
 
 Test scenarios:
-- Successful swap: old item dropped, new item picked up, bag stays at 5
+- Successful swap: old item dropped, new item picked up, bag stays at 8
 - Pickup target already gone: returns 409
 - Drop item not in bag: returns 400
 

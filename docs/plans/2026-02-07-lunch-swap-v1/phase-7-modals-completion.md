@@ -14,7 +14,7 @@ These can leverage the existing `ConfirmationModal.tsx` as a base or build custo
 
 ### BagFullSwapModal
 
-Shows current 5 bag items as tappable cards (food group colored). Header: "Bag is full!" Prompt: "Choose an item to drop, or cancel."
+Shows current 8 bag items as tappable cards (food group colored). Header: "Bag is full!" Prompt: "Choose an item to drop, or cancel."
 
 Flow:
 1. User taps item to drop -> item highlights red

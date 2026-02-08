@@ -380,6 +380,9 @@ export const SUPER_COMBOS: SuperComboDefinition[] = [
 **Step 3: Create `shared/data/xpConfig.ts`**
 
 ```typescript
+export const BAG_CAPACITY = 8;
+export const IDEAL_MEAL_SIZE = 5;
+
 export const XP_ACTIONS = {
   PICKUP: 10,
   DROP: 5,

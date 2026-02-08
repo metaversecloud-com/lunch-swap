@@ -14,12 +14,12 @@
 
 | Step | User Action | What They See | Backend Action |
 |------|------------|---------------|----------------|
-| 1 | Clicks key asset | Loading spinner, then "New Day!" screen with brown bag (5 items, 1 highlighted as matching ideal meal) and ideal meal target list | `GET /api/game-state` — checks if new day, generates brown bag + ideal meal if first visit today, spawns items into world |
+| 1 | Clicks key asset | Loading spinner, then "New Day!" screen with brown bag (8 items, 1 highlighted as matching ideal meal) and ideal meal target list (5 items) | `GET /api/game-state` — checks if new day, generates brown bag (8 items) + ideal meal (5 items) if first visit today, spawns items into world |
 | 2 | Reviews ideal meal | 5-slot ideal meal display: 1 drink, 1 main, 3 from fruit/veggie/snack. Matching items glow. Missing items shown as silhouettes with food group color | None (client rendering from game-state data) |
 | 3 | Taps item in bag to drop | Item highlights with "Drop" button. On confirm: item disappears from bag, particle effect plays | `POST /api/drop-item` — removes item from visitor data, creates dropped asset in world with tracking metadata |
 | 4 | Walks around world with drawer open | "Nearby" section updates as avatar moves. Items within range appear with name, rarity badge, and food group color | `GET /api/nearby-items` — returns food assets within proximity radius of visitor position |
 | 5 | Taps nearby item to pick up | "Grab it!" button on item card. On confirm: item appears in bag, "Did you know?" toast with food fact, pickup particle effect | `POST /api/pickup-item` — validates bag capacity, removes dropped asset, adds to visitor bag, fires toast + particle |
-| 6 | Collects all 5 ideal meal items | "Submit Meal" button activates with glow animation. Ideal meal display shows all 5 slots filled | None (client state comparison of bag vs ideal meal) |
+| 6 | Collects all 5 ideal meal items (bag may hold up to 8) | "Submit Meal" button activates with glow animation. Ideal meal display shows all 5 slots filled | None (client state comparison of bag vs ideal meal) |
 | 7 | Taps "Submit Meal" | Validation screen → celebration animation → Nutrition Score breakdown → XP earned → badge awarded (if applicable) → remaining non-meal items auto-dropped into world | `POST /api/submit-meal` — validates meal matches ideal, calculates nutrition score + super combos, grants XP, checks/grants badges, drops remaining items, marks day complete |
 | 8 | Views completion summary | "Meal Complete!" screen with nutrition score (0-100), XP earned, any new badges, super combo bonuses found. "Done for today" message | None (rendered from submit-meal response) |
 
@@ -50,7 +50,7 @@
 
 | Step | User Action | What They See | Backend Action |
 |------|------------|---------------|----------------|
-| 1 | Attempts pickup at 5/5 capacity | "Bag is full!" message with current bag items. Each item has a "Drop this instead" button. "Cancel" button at bottom | None (client-side flow) |
+| 1 | Attempts pickup at 8/8 capacity | "Bag is full!" message with current bag items. Each item has a "Drop this instead" button. "Cancel" button at bottom | None (client-side flow) |
 | 2a | Selects item to drop | Selected item highlighted red. "Confirm swap?" prompt | None (client-side selection) |
 | 3a | Confirms swap | Old item dropped into world (particle effect), new item added to bag (particle effect), bag updates | `POST /api/swap-item` — atomic: drops old item, picks up new item, updates visitor data |
 | 2b | Taps "Cancel" | Drawer returns to normal bag view, food item remains in world | None |
