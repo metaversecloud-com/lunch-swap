@@ -95,7 +95,7 @@ Test scenarios:
 - `POST /api/spin-wheel` returns 400 if no Reward Token in inventory
 - `POST /api/spin-wheel` returns a buff and consumes 1 Reward Token
 - `POST /api/spin-wheel` returns 400 if already spun today (`dailyBuff !== null`)
-- `GET /api/game-state` includes `hasMealTicket: true/false` and `dailyBuff`
+- `GET /api/game-state` includes `hasRewardToken: true/false` and `dailyBuff`
 - Buff effects apply: "double-xp" doubles XP in pickup/submit, "big-bag" increases capacity to 10
 
 **Step 3: Run tests to verify fail**
@@ -113,7 +113,7 @@ Test scenarios:
 
 **Step 5: Update `handleGetGameState`**
 
-Add to response: `hasMealTicket` (check inventory), `dailyBuff` (from visitor data)
+Add to response: `hasRewardToken` (check inventory), `dailyBuff` (from visitor data)
 
 **Step 6: Wire buff effects into existing controllers**
 

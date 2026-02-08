@@ -31,10 +31,10 @@ git commit -m "feat: add mystery item reveal animation and hidden nearby cards"
 - Create: `client/src/components/BonusWheel.tsx`
 - Create: `client/src/components/BonusWheelPrompt.tsx`
 - Create: `client/src/components/ActiveBuff.tsx`
-- Modify: `client/src/components/GameView.tsx` — show wheel prompt on new day with ticket
+- Modify: `client/src/components/GameView.tsx` — show wheel prompt on new day with token
 - Modify: `client/src/components/index.ts`
 
-**BonusWheelPrompt**: Shown on new day if `hasMealTicket === true`. "You have a Meal Ticket! Spin the wheel for today's bonus?" with "Spin!" and "Save for later" buttons. Uses SDK classes: `btn`, `btn-outline`, `h2`, `p1`.
+**BonusWheelPrompt**: Shown on new day if `hasRewardToken === true`. "You have a Reward Token! Spin the wheel for today's bonus?" with "Spin!" and "Save for later" buttons. Uses SDK classes: `btn`, `btn-outline`, `h2`, `p1`.
 
 **BonusWheel**: CSS-animated spinning wheel with 5 segments (colored by buff). Spins for 2-3 seconds after calling `POST /api/spin-wheel`, lands on the won buff. Celebration animation on land. Respect `prefers-reduced-motion`.
 

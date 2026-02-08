@@ -24,7 +24,7 @@
 | 2 | [phase-2-game-logic.md](./phase-2-game-logic.md) | 3 | Game logic utilities (meal gen, nutrition, combos, dates) |
 | 2.5 | [phase-2.5-sdk-mocks.md](./phase-2.5-sdk-mocks.md) | 3.5 | Expand SDK mock for comprehensive testing |
 | 3 | [phase-3-core-controllers.md](./phase-3-core-controllers.md) | 4-9 | Core controllers (game-state, nearby, pickup, drop, swap, submit) |
-| 3.5 | [phase-3.5-engagement.md](./phase-3.5-engagement.md) | 9.5-9.7 | Mystery items, Meal Ticket / bonus wheel, hot streaks |
+| 3.5 | [phase-3.5-engagement.md](./phase-3.5-engagement.md) | 9.5-9.7 | Mystery items, Reward Token / bonus wheel, hot streaks |
 | 4 | [phase-4-admin-controllers.md](./phase-4-admin-controllers.md) | 10 | Admin controllers (remove-all, spawn, stats) |
 | 5 | [phase-5-client-state.md](./phase-5-client-state.md) | 11 | Client state management expansion |
 | 6 | [phase-6-core-ui.md](./phase-6-core-ui.md) | 12-18 | Core game UI (GameView, NewDay, BrownBag, NearbyItems, etc.) |

@@ -66,7 +66,7 @@ Every day, players receive a randomized "brown bag" of 8 food items and a unique
 - 24-hour item degradation (items despawn 24h after last drop)
 - Item tracking: firstDroppedBy, firstDroppedDateTime, lastDroppedBy, lastDroppedDateTime
 - Mystery Items (~15% of spawns are "?" bags, revealed on pickup)
-- Meal Tickets (teacher-awarded currency) & Daily Bonus Wheel (spend ticket to spin for daily buff)
+- Reward Tokens (universal platform currency, teacher-awarded) & Daily Bonus Wheel (spend token to spin for daily buff)
 - Hot Streaks (3 ideal-meal pickups in a row triggers 3x XP on next pickup)
 - Submit Meal flow with validation, rewards, and auto-drop of remaining items
 - Badges via inventory system (first completion, streaks, etc.)

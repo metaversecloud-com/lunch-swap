@@ -80,14 +80,14 @@ Captured during plan review on 2026-02-07. All implementing agents MUST read thi
      - **"Combo Finder"** — Super combo pairs glow in nearby-items list (weight: 15%)
      - **"Epic Drop"** — A random epic item is added to your bag immediately (weight: 10%)
   5. Buff is stored in visitor data for the day, applied to relevant game logic
-  6. Player can skip the wheel (save the ticket for another day)
+  6. Player can skip the wheel (save the token for another day)
 - **Implementation:**
-  - Add `dailyBuff: string | null` and `hasMealTicket: boolean` to game state
+  - Add `dailyBuff: string | null` and `hasRewardToken: boolean` to game state
   - Check inventory for Reward Token on `GET /api/game-state`
-  - New endpoint: `POST /api/spin-wheel` — consumes ticket, returns random buff
+  - New endpoint: `POST /api/spin-wheel` — consumes token, returns random buff
   - Buff logic woven into existing controllers (XP calc, bag capacity, etc.)
   - Wheel UI component (CSS animation, no external library needed)
-- **Why it works:** Teachers control the supply. Students want tickets. Creates a bridge between classroom behavior and game rewards. The randomness of the wheel makes each ticket exciting.
+- **Why it works:** Teachers control the supply. Students want tokens. Creates a bridge between classroom behavior and game rewards. The randomness of the wheel makes each token exciting.
 
 ### D10: Hot Streaks (Variable Reinforcement)
 - After picking up 3 items in a row that match your ideal meal, trigger a "Hot Streak!"
