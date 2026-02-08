@@ -1,1 +1,1 @@
-export { VisitorGameData as VisitorDataObject } from "./DataObjects.js";
+export type { VisitorGameData as VisitorDataObject } from "./DataObjects.js";
