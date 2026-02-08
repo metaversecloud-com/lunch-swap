@@ -110,28 +110,25 @@ git commit -m "feat: add BrownBag and BagItemCard components"
 **Files:**
 - Create: `client/src/components/NearbyItems.tsx`
 - Create: `client/src/components/NearbyItemCard.tsx`
-- Create: `client/src/components/AutoGrabToggle.tsx`
 - Modify: `client/src/components/index.ts`
 
-**AutoGrabToggle**: Magnet icon, "Auto-Grab" label, toggle switch. `aria-pressed` state. Toggles `autoGrabEnabled` in context.
+**Note:** AutoGrabToggle is DEFERRED to V1.1 (D4). Players pick up items manually via "Grab it!" button.
 
 **NearbyItemCard**: Single nearby item. Name, food group badge (color-coded), rarity badge (text), distance indicator, "Grab it!" button. Items matching ideal meal: highlighted border + star icon. `aria-label` includes all item info.
 
-**NearbyItems**: Scrollable list. Polls `GET /api/nearby-items` every 3 seconds via `useEffect` + `setInterval`. Updates `nearbyItems` in context. Auto-Grab mode: when enabled and item appears nearby, auto-calls `POST /api/pickup-item` (pauses when bag full). Empty state: "No food nearby. Keep exploring!"
+**NearbyItems**: Scrollable list. Polls `GET /api/nearby-items` every 3 seconds via `useEffect` + `setInterval`. Updates `nearbyItems` in context. Empty state: "No food nearby. Keep exploring!"
 
 Props: `onPickup: (droppedAssetId: string) => void`, `onBagFull: (droppedAssetId: string) => void`
 
-**Step 1: Implement `AutoGrabToggle.tsx`**
+**Step 1: Implement `NearbyItemCard.tsx`**
 
-**Step 2: Implement `NearbyItemCard.tsx`**
+**Step 2: Implement `NearbyItems.tsx`** (with polling logic)
 
-**Step 3: Implement `NearbyItems.tsx`** (with polling logic)
-
-**Step 4: Commit**
+**Step 3: Commit**
 
 ```bash
-git add client/src/components/NearbyItems.tsx client/src/components/NearbyItemCard.tsx client/src/components/AutoGrabToggle.tsx client/src/components/index.ts
-git commit -m "feat: add NearbyItems with polling, AutoGrabToggle, NearbyItemCard"
+git add client/src/components/NearbyItems.tsx client/src/components/NearbyItemCard.tsx client/src/components/index.ts
+git commit -m "feat: add NearbyItems with polling, NearbyItemCard"
 ```
 
 ---

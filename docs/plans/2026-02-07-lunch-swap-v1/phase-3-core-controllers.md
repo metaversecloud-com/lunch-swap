@@ -29,12 +29,22 @@ Expected: FAIL — new test expectations don't match boilerplate controller.
 
 Replace the boilerplate controller with the full game-state logic:
 1. Get credentials, fetch dropped asset (key asset), get visitor
-2. Fetch visitor data object (initialize with defaults if empty)
-3. Check `isNewDay` comparing `lastPlayedDate` vs `getCurrentDateMT()`
-4. If new day: generate ideal meal, generate brown bag, reset daily counters, spawn items into world, update streak on User data object
-5. If same day: return existing state
-6. If completed: return completion summary
-7. Return `GameState` response
+2. Accept optional `clickedFoodAssetId` query param (D2: food items are clickable in world). If present, check if it matches a food item by fetching the asset and checking `uniqueName` starts with `lunch-swap-food`. If yes, include `clickedItem` details in response for pickup prompt. If no, treat as key asset click.
+3. Fetch visitor data object (initialize with defaults if empty)
+4. Check `isNewDay` comparing `lastPlayedDate` vs `getCurrentDateMT()`
+5. If new day:
+   a. Auto-drop all items from yesterday's bag into the world at key asset position (B4)
+   b. Generate ideal meal, generate brown bag, reset daily counters
+   c. Spawn items into world
+   d. Update streak on User data object using detailed streak logic (B5):
+      - If `lastCompletionDate === yesterday` → streak continues (don't increment yet — that happens at submit)
+      - If `lastCompletionDate < yesterday - 1` or empty → streak will start fresh on next completion
+      - Display streak: if `lastCompletionDate < yesterday`, show streak as 0 in response but DON'T write 0 to User data (player might still complete today)
+6. If same day: return existing state
+7. If completed: return completion summary
+8. Fetch nearby items and include as `nearbyItems[]` in response (D7: client renders immediately without waiting for first poll)
+9. Include `hasRewardToken` (check inventory) and `dailyBuff` (from visitor data) in response
+10. Return `GameState` response (with `clickedItem` if applicable)
 
 Follow the controller template from `CLAUDE.md`. Remove the leaderboard POST and boilerplate toast.
 
@@ -74,14 +84,17 @@ git commit -m "feat: rewrite handleGetGameState with daily reset, meal generatio
 
 **Step 3: Implement `handleGetNearbyItems.ts`**
 
-1. Get credentials, get visitor (position), fetch visitor data object (ideal meal)
-2. Fetch all food items: `world.fetchDroppedAssetsWithUniqueName("lunch-swap-food-*")`
-3. For each: check 24h TTL, delete expired items
-4. Calculate distance from visitor position
-5. Filter to items within `proximityRadius` (from world data object)
-6. Sort by distance ascending
-7. Flag `matchesIdealMeal` for each item
-8. Return `NearbyItem[]`
+1. Get credentials, get visitor, fetch visitor data object (ideal meal)
+2. Get visitor position via `visitor.moveTo.x` and `visitor.moveTo.y` (B1: NOT `visitor.position`)
+3. Fetch all food items: `world.fetchDroppedAssetsWithUniqueName("lunch-swap-food")` with `isPartial: true`
+4. Parse `uniqueName` for metadata (`lunch-swap-food|{itemId}|{rarity}|{timestamp}`) — do NOT call `fetchDataObject()` per item (B3: O(1) not O(N) per poll)
+5. Check 24h TTL by parsing `timestamp` from `uniqueName`, delete expired items
+6. Look up item `name` and `foodGroup` from `FOOD_ITEMS_BY_ID` using `itemId` from `uniqueName` (B3)
+7. Calculate distance from visitor `moveTo` coordinates
+8. Filter to items within `proximityRadius` (from world data object)
+9. Sort by distance ascending
+10. Flag `matchesIdealMeal` for each item
+11. Return `NearbyItem[]`
 
 **Step 4: Add route and export**
 
@@ -111,7 +124,8 @@ git commit -m "feat: add GET /api/nearby-items controller"
 
 Test scenarios:
 - Successful pickup: item removed from world, added to bag, returns updated bag + fun fact + XP
-- Bag full (8 items): returns 400
+- Bag full before completion (8 items): returns 400 with "Bag is full (8/8)"
+- Bag full after completion (3 items): returns 400 with "Bag is full (3/3)" (B13)
 - Item already gone (409 conflict)
 - Item matches ideal meal: returns `matchesIdealMeal: true`
 - XP includes rarity multiplier
@@ -123,13 +137,14 @@ Test scenarios:
 1. Get credentials, validate `req.body.droppedAssetId`
 2. Lock the food asset (time-bucketed lockId)
 3. Fetch food asset data object — if asset gone, return 409
-4. Fetch visitor data object — check bag size against capacity (8 normally, 3 if `completedToday`), return 400 if full
+4. Fetch visitor data object — check bag size against dynamic capacity: `completedToday ? BAG_CAPACITY_POST_COMPLETION (3) : BAG_CAPACITY (8)`. If full, return 400 with dynamic message: `Bag is full (${bag.length}/${maxCapacity})` (B13)
 5. Delete dropped asset from world
-6. Add item to bag, increment `pickupsToday`, update `matchesIdealMeal` flags
-7. Update User data object: increment `totalPickups`, add to `uniqueItemsCollected`
-8. Calculate XP: `PICKUP * rarityMultiplier` + `COLLECT_IDEAL_ITEM` if match
-9. Fire toast with fun fact, trigger particle
-10. Return response
+6. Add item to bag, update `matchesIdealMeal` flags
+7. Use `visitor.incrementDataObjectValue("pickupsToday", 1)` for atomic counter update (B12)
+8. Update User data object: use `user.incrementDataObjectValue("totalPickups", 1)` (B12), add to `uniqueItemsCollected`
+9. Calculate XP: `PICKUP * rarityMultiplier` + `COLLECT_IDEAL_ITEM` if match
+10. Fire toast with fun fact, trigger particle
+11. Return response
 
 **Step 4: Add route and export**
 
@@ -165,13 +180,14 @@ Test scenarios:
 
 1. Get credentials, validate `req.body.itemId`
 2. Fetch visitor data object — find item in bag, return 400 if not found
-3. Get visitor position
-4. Remove item from bag, increment `dropsToday`
-5. Create dropped asset near visitor position (small random offset)
-6. Set food item data object on the new dropped asset
-7. Update User: increment `totalDrops`
-8. Trigger particle effect
-9. Return response with `droppedAssetId`
+3. Get visitor position via `visitor.moveTo.x` and `visitor.moveTo.y` (B1: NOT `visitor.position`)
+4. Remove item from bag
+5. Use `visitor.incrementDataObjectValue("dropsToday", 1)` for atomic counter update (B12)
+6. Create dropped asset near visitor `moveTo` position (small random offset)
+7. Set food item data object on the new dropped asset with `uniqueName: "lunch-swap-food|{itemId}|{rarity}|{Date.now()}"` (B2)
+8. Update User: use `user.incrementDataObjectValue("totalDrops", 1)` (B12)
+9. Trigger particle effect
+10. Return response with `droppedAssetId`
 
 **Step 4: Add route and export**
 
@@ -236,7 +252,7 @@ Test scenarios:
 - Already completed today: returns 400
 - Super combos detected and included
 - Remaining non-meal items auto-dropped into world
-- Streak incremented if consecutive day
+- Streak logic (B5): increment if `lastCompletionDate === yesterday`, start at 1 if gap or empty
 
 **Step 2: Run test to verify fail**
 
@@ -248,12 +264,23 @@ Test scenarios:
 4. Calculate nutrition score, detect super combos
 5. Calculate total XP: base + rarity bonuses + nutrition bonus + combo bonuses + streak bonus
 6. Update visitor: `completedToday = true`, `completionTimestamp`, `nutritionScore`, `superCombosFound`
-7. Update User: XP, level, streak, lifetime stats
-8. Grant badges via `visitor.grantInventoryItem()` if milestones hit (first completion, streak, etc.)
-9. Auto-drop remaining non-meal items from bag into world, clear bag to empty
-10. Fire celebration toast, trigger fireworks particle
-11. Increment world `totalCompletionsToday`
-12. Return `SubmitMealResponse` (client uses `BAG_CAPACITY_POST_COMPLETION = 3` for capacity enforcement going forward)
+7. Update User streak with detailed logic (B5):
+   - Fetch User data object for `lastCompletionDate` and `currentStreak`
+   - If `lastCompletionDate === yesterday` → `currentStreak++` (continuing streak)
+   - If `lastCompletionDate` is empty or `< yesterday - 1` → `currentStreak = 1` (starting fresh)
+   - Update `lastCompletionDate = today`, and `longestStreak = Math.max(longestStreak, currentStreak)`
+8. Update User: XP, level, lifetime stats. Use `user.incrementDataObjectValue()` for `totalMealsCompleted`, `totalSuperCombos` (B12)
+9. Grant badges via `visitor.grantInventoryItem()` with idempotency (D3). Check each badge:
+   - **"First Feast"** — `totalMealsCompleted === 1` (first ever completion)
+   - **"Nutrition Guru"** — `nutritionScore >= 90` (hard to achieve)
+   - **"Streak Master"** — `currentStreak >= 7` (7-day streak)
+   - **"Combo Chef"** — `superCombosFound.length >= 3` in this meal
+   - **"Generous Chef"** — `totalDrops >= 20` (checked from User data)
+   Before granting, check if badge already granted (idempotent — don't grant twice)
+10. Auto-drop remaining non-meal items from bag into world at visitor `moveTo` position, clear bag to empty
+11. Fire celebration toast, trigger fireworks particle
+12. Use `world.incrementDataObjectValue("totalCompletionsToday", 1)` (B12)
+13. Return `SubmitMealResponse` (client uses `BAG_CAPACITY_POST_COMPLETION = 3` for capacity enforcement going forward)
 
 **Step 4: Add route and export**
 

@@ -23,7 +23,7 @@ export const SET_NEARBY_ITEMS = "SET_NEARBY_ITEMS";
 export const SET_COMPLETED = "SET_COMPLETED";
 
 // Expand InitialState to include all game fields from GameState
-// + UI-only state: autoGrabEnabled, isNewDay, nearbyItems
+// + UI-only state: isNewDay, nearbyItems
 ```
 
 Import types from `@shared/types/FoodItem`, `@shared/types/NearbyItem`, `@shared/types/NutritionScore`.
@@ -49,8 +49,7 @@ export interface InitialState {
   currentStreak?: number;
   // Nearby items (from polling)
   nearbyItems?: NearbyItem[];
-  // UI-only state
-  autoGrabEnabled?: boolean;
+  // Note: autoGrabEnabled DEFERRED to V1.1 (D4)
 }
 ```
 
@@ -80,7 +79,7 @@ export const initialState = {
   level: 1,
   currentStreak: 0,
   nearbyItems: [],
-  autoGrabEnabled: false,
+  // autoGrabEnabled: DEFERRED to V1.1 (D4)
 };
 ```
 

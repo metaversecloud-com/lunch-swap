@@ -33,7 +33,7 @@ export interface FoodItemDefinition {
   name: string;
   foodGroup: FoodGroup;
   rarity: Rarity;
-  assetId: string;
+  imageUrl: string;
   nutrition: NutritionInfo;
   funFact: string;
   superComboPairs: string[];
@@ -299,7 +299,7 @@ git commit -m "feat: add shared type definitions for Lunch Swap game"
 
 **Step 1: Create `shared/data/foodItems.ts`**
 
-Create the full food item database — approximately 60 items across all 5 food groups and 3 active rarities (common, rare, epic). Each item needs: `itemId`, `name`, `foodGroup`, `rarity`, `assetId` (placeholder `""` for now — populated when assets are uploaded), `nutrition`, `funFact`, `superComboPairs`.
+Create the full food item database — approximately 60 items across all 5 food groups and 3 active rarities (common, rare, epic). Each item needs: `itemId`, `name`, `foodGroup`, `rarity`, `imageUrl` (placeholder `""` for now — populated when image assets are uploaded), `nutrition`, `funFact`, `superComboPairs`.
 
 Distribution target:
 - **Drinks** (12 items): 7 common, 3 rare, 2 epic
@@ -318,7 +318,7 @@ export const FOOD_ITEMS: FoodItemDefinition[] = [
     name: "Water Bottle",
     foodGroup: "drink",
     rarity: "common",
-    assetId: "",
+    imageUrl: "",
     nutrition: { calories: 0, protein: 0, carbs: 0, fiber: 0, vitamins: [] },
     funFact: "Your brain is about 75% water! Staying hydrated helps you think faster.",
     superComboPairs: [],
@@ -328,7 +328,7 @@ export const FOOD_ITEMS: FoodItemDefinition[] = [
     name: "Milk",
     foodGroup: "drink",
     rarity: "common",
-    assetId: "",
+    imageUrl: "",
     nutrition: { calories: 150, protein: 8, carbs: 12, fiber: 0, vitamins: ["D", "B12"] },
     funFact: "One glass of milk has as much calcium as 7 cups of broccoli!",
     superComboPairs: ["cereal"],

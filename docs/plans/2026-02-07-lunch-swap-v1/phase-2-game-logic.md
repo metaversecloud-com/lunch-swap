@@ -47,6 +47,16 @@ describe("generateIdealMeal", () => {
     const unique = new Set(ids);
     expect(unique.size).toBeGreaterThan(1);
   });
+
+  test("other 3 slots include at least 2 distinct food groups (D6)", () => {
+    // Run multiple times to catch randomness
+    for (let i = 0; i < 20; i++) {
+      const meal = generateIdealMeal();
+      const others = meal.filter(i => ["fruit", "veggie", "snack"].includes(i.foodGroup));
+      const distinctGroups = new Set(others.map(i => i.foodGroup));
+      expect(distinctGroups.size).toBeGreaterThanOrEqual(2);
+    }
+  });
 });
 
 describe("generateBrownBag", () => {
@@ -139,9 +149,14 @@ export function generateIdealMeal(): IdealMealItem[] {
   const drink = pickRandom(FOOD_ITEMS_BY_GROUP.drink, 1)[0];
   const main = pickRandom(FOOD_ITEMS_BY_GROUP.main, 1)[0];
 
+  // D6: "other 3" slots must include at least 2 distinct food groups
+  // e.g., 2 fruits + 1 veggie = OK, 3 fruits = NOT OK
   const otherGroups: FoodGroup[] = ["fruit", "veggie", "snack"];
   const otherPool = otherGroups.flatMap(g => FOOD_ITEMS_BY_GROUP[g]);
-  const others = pickRandom(otherPool, 3);
+  let others: typeof otherPool;
+  do {
+    others = pickRandom(otherPool, 3);
+  } while (new Set(others.map(i => i.foodGroup)).size < 2);
 
   return [drink, main, ...others].map(item => ({
     itemId: item.itemId,

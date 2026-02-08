@@ -25,7 +25,7 @@
 
 - **Route**: `/` (default view, main state)
 - **When shown**: After New Day Welcome or on same-day rejoin
-- **Components used**: `BrownBag`, `IdealMealTracker`, `NearbyItems`, `AutoGrabToggle`, `SubmitMealButton`
+- **Components used**: `BrownBag`, `IdealMealTracker`, `NearbyItems`, `SubmitMealButton`
 - **Data requirements**:
   - On mount: `GET /api/game-state` (if not already loaded)
   - Polling: `GET /api/nearby-items` every 3 seconds while drawer is open
@@ -35,7 +35,6 @@
   - View Ideal Meal: See 5 target items with collected/missing status
   - Tap bag item: Expand item detail (nutrition preview, "Drop" button)
   - Tap "Drop": Drop item from bag into world → `POST /api/drop-item`
-  - Toggle Auto-Grab: Enable/disable auto-pickup mode
   - View Nearby Items: List of food items within proximity radius
   - Tap nearby item: Quick-grab prompt → `POST /api/pickup-item`
   - Tap "Submit Meal" (when eligible): → `POST /api/submit-meal`
@@ -114,8 +113,8 @@
 
 ### Modal: Bag Full Swap
 
-- **Trigger**: Player attempts pickup when bag has 5 items
-- **Content**: "Bag is full!" header. Shows current 8 bag items as tappable cards (food group colored). Prompt: "Choose an item to drop, or cancel."
+- **Trigger**: Player attempts pickup when bag is at capacity (8 before completion, 3 after)
+- **Content**: "Bag is full!" header. Shows current bag items as tappable cards (food group colored). Prompt: "Choose an item to drop, or cancel."
 - **Actions**:
   - Tap item to drop: Highlights item red, shows "Confirm swap?" → `POST /api/swap-item` with dropItemId + pickupDroppedAssetId. On success: both particle effects, bag updates, modal closes.
   - Cancel: Close modal, food item remains in world, bag unchanged.
@@ -177,7 +176,7 @@
 | Network failure | Error banner: "Something went wrong. Try again!" | Retry button re-fetches game state |
 | Invalid credentials | "Session expired. Please reopen the app." | User must click key asset again |
 | Item already picked up | Toast: "Someone already grabbed that one!" | Dismiss toast, try another item |
-| Bag full (unexpected) | "Bag is full (8/8)! Drop an item first." | Shows swap flow |
+| Bag full (unexpected) | "Bag is full (N/N)! Drop an item first." (dynamic: 8/8 or 3/3) | Shows swap flow |
 | Meal validation failure | "Your meal isn't complete yet." + list of missing items | Dismiss, continue collecting |
 | Admin action failure | Toast: "Action failed. Please try again." | Retry |
 
@@ -219,7 +218,6 @@ Scrollable list of food items within proximity radius:
 - Sorted by distance (closest first)
 - "Grab it!" button on each item
 - Auto-updates every 3 seconds while drawer is open
-- Auto-Grab toggle at top of section
 
 ### NutritionPreview
 
@@ -237,15 +235,6 @@ Post-submission score breakdown:
 - Each quadrant labeled and colored
 - Super Combo callouts with item pair icons
 - Letter grade overlay (A+, A, B+, B, C+, C)
-
-### AutoGrabToggle
-
-Simple toggle switch in the nearby items section:
-- Magnet icon
-- "Auto-Grab" label
-- Toggle on/off
-- When on: items within proximity auto-added to bag
-- When off: items appear in nearby list for manual pickup
 
 ## Food Group Color System
 
@@ -272,11 +261,10 @@ App (DO NOT MODIFY)
       MainGameView (primary state)
         IdealMealTracker
         BrownBag
-          BagItem (repeated, max 5)
+          BagItem (repeated, max 8; max 3 after completion)
             ItemDetail (expanded state)
               NutritionPreview
         NearbyItems
-          AutoGrabToggle
           NearbyItemCard (repeated)
         SubmitMealButton (conditional: all ideal items collected)
       ItemPickupPrompt (conditional: clicked food asset in world)
@@ -303,7 +291,6 @@ App (DO NOT MODIFY)
 - All modals trap focus and can be closed with Escape
 - Item images have alt text: "[Item name] — [food group], [rarity]"
 - Progress indicators have aria-valuenow/aria-valuemax
-- Auto-Grab toggle has aria-pressed state
 - Rarity is conveyed via text label, not just border style (for color-blind users)
 - Touch targets minimum 44x44px for all interactive elements
 - `prefers-reduced-motion`: disable pulse animations, glow effects, particle shimmer

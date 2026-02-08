@@ -55,7 +55,9 @@
 | 3a | Confirms swap | Old item dropped into world (particle effect), new item added to bag (particle effect), bag updates | `POST /api/swap-item` — atomic: drops old item, picks up new item, updates visitor data |
 | 2b | Taps "Cancel" | Drawer returns to normal bag view, food item remains in world | None |
 
-### Auto-Grab Mode
+### Auto-Grab Mode (DEFERRED to V1.1 — see D4 in decisions.md)
+
+> Auto-Grab is out of scope for V1. Players pick up items manually via "Grab it!" button, which is more engaging for the target age group (7-17). This section is preserved for V1.1 planning.
 
 | Step | User Action | What They See | Backend Action |
 |------|------------|---------------|----------------|
