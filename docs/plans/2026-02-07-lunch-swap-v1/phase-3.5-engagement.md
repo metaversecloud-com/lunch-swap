@@ -43,7 +43,7 @@ git commit -m "feat: add mystery items (~15% of spawns hidden until pickup)"
 
 ---
 
-## Task 9.6: Meal Tickets & Daily Bonus Wheel
+## Task 9.6: Reward Tokens & Daily Bonus Wheel
 
 **Files:**
 - Create: `server/controllers/handleSpinWheel.ts`
@@ -51,10 +51,14 @@ git commit -m "feat: add mystery items (~15% of spawns hidden until pickup)"
 - Modify: `server/routes.ts` — add `POST /api/spin-wheel`
 - Modify: `shared/types/DataObjects.ts` — add `dailyBuff` to `VisitorGameData`
 - Create: `shared/data/wheelBuffs.ts`
-- Modify: `handleGetGameState` — check for Meal Ticket in inventory, apply active buff
+- Modify: `handleGetGameState` — check for Reward Token in inventory, apply active buff
 - Test: `server/tests/spin-wheel.test.ts`
 
-**Important:** Meal Tickets are a **universal Topia ecosystem token** — not specific to this game. Teachers award them across the platform. This game reads the player's inventory to check if they have one, and consumes it on spin. The token must be created in the Topia dashboard as an ecosystem inventory item.
+**Important:** Reward Tokens are a **universal Topia ecosystem token** — NOT specific to this game. Teachers award them across the entire platform for positive behaviors, learning objectives, etc. Any game can read and consume them. This game:
+1. Reads the player's inventory to check if they have a Reward Token
+2. Consumes one on wheel spin
+3. Does NOT create or define the token — it's a platform-level ecosystem inventory item managed in the Topia dashboard
+The token's inventory item ID will be configured via an environment variable or game config (so it's not hardcoded).
 
 **Step 1: Create `shared/data/wheelBuffs.ts`**
 
@@ -88,8 +92,8 @@ export function spinWheel(): WheelBuff {
 **Step 2: Write failing tests**
 
 Test scenarios:
-- `POST /api/spin-wheel` returns 400 if no Meal Ticket in inventory
-- `POST /api/spin-wheel` returns a buff and consumes 1 Meal Ticket
+- `POST /api/spin-wheel` returns 400 if no Reward Token in inventory
+- `POST /api/spin-wheel` returns a buff and consumes 1 Reward Token
 - `POST /api/spin-wheel` returns 400 if already spun today (`dailyBuff !== null`)
 - `GET /api/game-state` includes `hasMealTicket: true/false` and `dailyBuff`
 - Buff effects apply: "double-xp" doubles XP in pickup/submit, "big-bag" increases capacity to 10
@@ -100,8 +104,8 @@ Test scenarios:
 
 1. Get credentials, get visitor
 2. Check `visitor.dataObject.dailyBuff` — if already set, return 400 "Already spun today"
-3. Check inventory for Meal Ticket — if none, return 400 "No Meal Tickets"
-4. Consume 1 Meal Ticket from inventory
+3. Check inventory for Reward Token — if none, return 400 "No Reward Tokens"
+4. Consume 1 Reward Token from inventory
 5. Spin wheel (weighted random)
 6. Store buff in visitor data: `dailyBuff: buff.id`
 7. Apply immediate buffs (e.g., "rare-start" upgrades a bag item, "epic-drop" adds item to bag)
@@ -129,7 +133,7 @@ router.post("/spin-wheel", handleSpinWheel);
 **Step 9: Commit**
 
 ```bash
-git commit -m "feat: add Meal Ticket / Daily Bonus Wheel with weighted buffs"
+git commit -m "feat: add Reward Token / Daily Bonus Wheel with weighted buffs"
 ```
 
 ---

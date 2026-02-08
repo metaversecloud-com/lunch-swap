@@ -63,13 +63,16 @@ Captured during plan review on 2026-02-07. All implementing agents MUST read thi
   - On pickup, server returns the real item data — client plays a reveal animation
 - **Why it works:** Every "?" pickup could be a rare/epic item. Creates anticipation and excitement on every mystery grab.
 
-### D9: Meal Tickets & Daily Bonus Wheel (Variable Reinforcement)
-- **Meal Tickets** are an inventory-based currency awarded by teachers or earned through learning objectives
-- Teachers award Meal Tickets via Topia's inventory system (like badges)
+### D9: Reward Tokens & Daily Bonus Wheel (Variable Reinforcement)
+- **Reward Tokens are a UNIVERSAL Topia ecosystem token** — not specific to this game
+- Teachers award Reward Tokens across the platform for positive behaviors, learning objectives, etc.
+- ANY game in the ecosystem can read and consume Reward Tokens
+- This game reads the player's inventory to check for them, and consumes one on wheel spin
+- The token must exist as an ecosystem inventory item in the Topia dashboard (platform-level, not app-level)
 - **Daily Bonus Wheel flow:**
   1. Player opens app for the day
-  2. If player has 1+ Meal Tickets in inventory, show "Spin the Wheel?" prompt
-  3. Player spends 1 Meal Ticket to spin
+  2. If player has 1+ Reward Tokens in inventory, show "Spin the Wheel?" prompt
+  3. Player spends 1 Reward Token to spin
   4. Wheel lands on a random daily buff:
      - **"Double XP"** — All XP earned today is 2x (weight: 30%)
      - **"Rare Start"** — One item in your starting bag is upgraded to rare (weight: 25%)
@@ -80,7 +83,7 @@ Captured during plan review on 2026-02-07. All implementing agents MUST read thi
   6. Player can skip the wheel (save the ticket for another day)
 - **Implementation:**
   - Add `dailyBuff: string | null` and `hasMealTicket: boolean` to game state
-  - Check inventory for Meal Ticket on `GET /api/game-state`
+  - Check inventory for Reward Token on `GET /api/game-state`
   - New endpoint: `POST /api/spin-wheel` — consumes ticket, returns random buff
   - Buff logic woven into existing controllers (XP calc, bag capacity, etc.)
   - Wheel UI component (CSS animation, no external library needed)
