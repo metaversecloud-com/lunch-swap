@@ -381,6 +381,7 @@ export const SUPER_COMBOS: SuperComboDefinition[] = [
 
 ```typescript
 export const BAG_CAPACITY = 8;
+export const BAG_CAPACITY_POST_COMPLETION = 3;
 export const IDEAL_MEAL_SIZE = 5;
 
 export const XP_ACTIONS = {

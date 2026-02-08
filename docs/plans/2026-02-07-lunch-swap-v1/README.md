@@ -28,6 +28,10 @@
 
 Each phase builds on the previous. Server-first: phases 1-4 are fully testable without the client. Phases 5-8 wire up the UI. Phase 9 polishes everything.
 
+## Critical: Read Before Building
+
+**[decisions.md](./decisions.md)** — All design decisions, bug fixes, and corrections from plan review. Every implementing agent MUST read this file before starting any phase.
+
 ## Key References
 
 - PRD: `docs/prd/` (overview, user-flows, data-models, api-endpoints, ui-screens)

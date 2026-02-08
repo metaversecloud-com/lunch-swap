@@ -123,7 +123,7 @@ Test scenarios:
 1. Get credentials, validate `req.body.droppedAssetId`
 2. Lock the food asset (time-bucketed lockId)
 3. Fetch food asset data object — if asset gone, return 409
-4. Fetch visitor data object — check bag size, return 400 if full
+4. Fetch visitor data object — check bag size against capacity (8 normally, 3 if `completedToday`), return 400 if full
 5. Delete dropped asset from world
 6. Add item to bag, increment `pickupsToday`, update `matchesIdealMeal` flags
 7. Update User data object: increment `totalPickups`, add to `uniqueItemsCollected`
@@ -250,10 +250,10 @@ Test scenarios:
 6. Update visitor: `completedToday = true`, `completionTimestamp`, `nutritionScore`, `superCombosFound`
 7. Update User: XP, level, streak, lifetime stats
 8. Grant badges via `visitor.grantInventoryItem()` if milestones hit (first completion, streak, etc.)
-9. Auto-drop remaining non-meal items from bag into world
+9. Auto-drop remaining non-meal items from bag into world, clear bag to empty
 10. Fire celebration toast, trigger fireworks particle
 11. Increment world `totalCompletionsToday`
-12. Return `SubmitMealResponse`
+12. Return `SubmitMealResponse` (client uses `BAG_CAPACITY_POST_COMPLETION = 3` for capacity enforcement going forward)
 
 **Step 4: Add route and export**
 

@@ -20,8 +20,8 @@
 | 4 | Walks around world with drawer open | "Nearby" section updates as avatar moves. Items within range appear with name, rarity badge, and food group color | `GET /api/nearby-items` — returns food assets within proximity radius of visitor position |
 | 5 | Taps nearby item to pick up | "Grab it!" button on item card. On confirm: item appears in bag, "Did you know?" toast with food fact, pickup particle effect | `POST /api/pickup-item` — validates bag capacity, removes dropped asset, adds to visitor bag, fires toast + particle |
 | 6 | Collects all 5 ideal meal items (bag may hold up to 8) | "Submit Meal" button activates with glow animation. Ideal meal display shows all 5 slots filled | None (client state comparison of bag vs ideal meal) |
-| 7 | Taps "Submit Meal" | Validation screen → celebration animation → Nutrition Score breakdown → XP earned → badge awarded (if applicable) → remaining non-meal items auto-dropped into world | `POST /api/submit-meal` — validates meal matches ideal, calculates nutrition score + super combos, grants XP, checks/grants badges, drops remaining items, marks day complete |
-| 8 | Views completion summary | "Meal Complete!" screen with nutrition score (0-100), XP earned, any new badges, super combo bonuses found. "Done for today" message | None (rendered from submit-meal response) |
+| 7 | Taps "Submit Meal" | Validation screen → celebration animation → Nutrition Score breakdown → XP earned → badge awarded (if applicable) → remaining non-meal items auto-dropped into world → bag capacity reduced to 3 | `POST /api/submit-meal` — validates meal matches ideal, calculates nutrition score + super combos, grants XP, checks/grants badges, drops remaining items, marks day complete, reduces bag capacity to 3 |
+| 8 | Views completion summary | "Meal Complete!" screen with nutrition score (0-100), XP earned, any new badges, super combo bonuses found. "Done for today" message. Can still pick up/drop items with reduced 3-slot bag. | None (rendered from submit-meal response) |
 
 ## Secondary User Flows
 
@@ -36,7 +36,7 @@
 
 | Step | User Action | What They See | Backend Action |
 |------|------------|---------------|----------------|
-| 1 | Clicks key asset (same day, already completed) | "Meal Complete!" summary screen with today's stats. "Come back tomorrow for a new meal!" | `GET /api/game-state` — detects completion, returns completion data |
+| 1 | Clicks key asset (same day, already completed) | "Meal Complete!" summary screen with today's stats. "Come back tomorrow for a new meal!" Bag capacity is 3 — player can still pick up/drop items to help others. | `GET /api/game-state` — detects completion, returns completion data with reduced bag capacity |
 
 ### Click Food Item in World (Drawer Closed)
 
@@ -84,7 +84,7 @@
 ### Edge Case 1: New Day Detection
 
 - **Scenario**: Player last played yesterday (or earlier). Opens app today.
-- **Expected behavior**: Old bag and ideal meal are cleared. New random bag (5 items, 1 matching) and new ideal meal assigned. Items from previous day that are still on ground may have expired (24h TTL).
+- **Expected behavior**: Old bag items are auto-dropped into world at key asset position. New random bag (8 items, 1 matching) and new ideal meal assigned. Items from previous day that are still on ground may have expired (24h TTL).
 - **Handling**: `GET /api/game-state` compares `lastPlayedDate` (stored in visitor data) against current date in Mountain Time. If different day, runs initialization flow. If same day, returns existing state.
 
 ### Edge Case 2: Concurrent Pickup Race Condition

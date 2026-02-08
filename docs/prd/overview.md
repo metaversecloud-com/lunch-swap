@@ -53,8 +53,8 @@ Every day, players receive a randomized "brown bag" of 8 food items and a unique
 - Resume same-day session with preserved state
 - Drop items into world (public, anyone can pick up)
 - Pick up items from world (click-to-open-drawer or nearby list in drawer)
-- Auto-Grab Mode toggle for quick collection
-- Bag capacity enforcement (8 items) with swap-out flow when full
+- ~~Auto-Grab Mode~~ (deferred to V1.1)
+- Bag capacity enforcement (8 items during play, reduced to 3 after meal completion) with swap-out flow when full
 - Rarity system: Common, Rare, Epic (Legendary teased, not available)
 - Meal composition: 1 drink + 1 main + 3 from {fruit, veggie, snack}
 - Nutrition scoring on meal submission (bonus XP for balanced meals)
@@ -70,7 +70,7 @@ Every day, players receive a randomized "brown bag" of 8 food items and a unique
 - Particle effects on drop, pickup, and meal submission
 - Toast notifications for key actions
 - Daily reset at midnight Mountain Time
-- One completion per day (done for the day after submission)
+- One completion per day (done for the day after submission, bag capacity reduced to 3)
 - Admin: remove all food items from world
 - Admin: spawn new food items
 - Analytics tracking for all key events
