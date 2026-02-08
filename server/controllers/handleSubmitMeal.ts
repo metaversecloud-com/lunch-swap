@@ -125,7 +125,7 @@ export const handleSubmitMeal = async (req: Request, res: Response) => {
           const newAsset = await Asset.create("webImageAsset", { credentials });
           await DroppedAsset.drop(newAsset, {
             position: { x: posX + offsetX, y: posY + offsetY },
-            uniqueName: `lunch-swap-food|${item.itemId}|${item.rarity}|${Date.now()}`,
+            uniqueName: `lunch-swap-food|${item.itemId}|${item.rarity}|${Date.now()}|0`,
             urlSlug,
             isInteractive: true,
             interactivePublicKey: credentials.interactivePublicKey,

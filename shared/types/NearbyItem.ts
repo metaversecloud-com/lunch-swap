@@ -9,4 +9,5 @@ export interface NearbyItem {
   distance: number;
   matchesIdealMeal: boolean;
   lastDroppedByName: string;
+  isMystery?: boolean;
 }

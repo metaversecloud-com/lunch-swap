@@ -28,7 +28,7 @@ export const handlePickupItem = async (req: Request, res: Response) => {
       return res.status(409).json({ success: false, message: "This item was already picked up" });
     }
 
-    // Parse uniqueName for item metadata (pattern: lunch-swap-food|{itemId}|{rarity}|{timestamp})
+    // Parse uniqueName for item metadata (pattern: lunch-swap-food|{itemId}|{rarity}|{timestamp}|{mystery})
     const parts = ((foodAsset as any).uniqueName || "").split("|");
     let itemId = "";
     let rarity: Rarity = "common";
@@ -40,6 +40,10 @@ export const handlePickupItem = async (req: Request, res: Response) => {
       itemId = dataObj.itemId;
       rarity = dataObj.rarity || "common";
     }
+
+    // Parse mystery flag from 5th segment (backward-compatible: default to "0")
+    const mysteryFlag = parts.length >= 5 ? parts[4] : "0";
+    const wasMystery = mysteryFlag === "1";
 
     const foodDef = FOOD_ITEMS_BY_ID.get(itemId);
     if (!foodDef) {
@@ -88,11 +92,44 @@ export const handlePickupItem = async (req: Request, res: Response) => {
       collected: item.collected || item.itemId === itemId,
     }));
 
-    // 7. Update visitor data
-    await visitor.updateDataObject({
-      brownBag: updatedBag,
-      idealMeal: updatedIdealMeal,
-    });
+    // 7. Hot streak logic
+    let xpMultiplier = 1;
+    const currentIdealStreak = visitorData.idealPickupStreak || 0;
+    const wasHotStreak = visitorData.hotStreakActive || false;
+
+    if (wasHotStreak) {
+      xpMultiplier = 3;
+      // Reset hot streak after consuming it
+      await visitor.updateDataObject({
+        brownBag: updatedBag,
+        idealMeal: updatedIdealMeal,
+        hotStreakActive: false,
+        idealPickupStreak: 0,
+      });
+    } else if (matchesIdealMeal) {
+      const newStreak = currentIdealStreak + 1;
+      const hotStreakActivated = newStreak >= 3;
+      await visitor.updateDataObject({
+        brownBag: updatedBag,
+        idealMeal: updatedIdealMeal,
+        idealPickupStreak: newStreak,
+        hotStreakActive: hotStreakActivated,
+      });
+      if (hotStreakActivated) {
+        // Fire "HOT STREAK!" toast
+        const world2 = World.create(urlSlug, { credentials });
+        world2.fireToast?.({
+          title: "HOT STREAK!",
+          text: "Your next pickup gets 3x XP!",
+        }).catch(() => {});
+      }
+    } else {
+      await visitor.updateDataObject({
+        brownBag: updatedBag,
+        idealMeal: updatedIdealMeal,
+        idealPickupStreak: 0,
+      });
+    }
 
     // B12: Atomic counter increment for pickupsToday
     if (visitor.incrementDataObjectValue) {
@@ -105,12 +142,13 @@ export const handlePickupItem = async (req: Request, res: Response) => {
       await user.incrementDataObjectValue("totalPickups", 1);
     }
 
-    // 9. Calculate XP earned
+    // 9. Calculate XP earned (with hot streak multiplier)
     const rarityConfig = RARITY_CONFIG[foodDef.rarity] || RARITY_CONFIG.common;
     let xpEarned = Math.round(XP_ACTIONS.PICKUP * rarityConfig.xpMultiplier);
     if (matchesIdealMeal) {
       xpEarned += XP_ACTIONS.COLLECT_IDEAL_ITEM;
     }
+    xpEarned = Math.round(xpEarned * xpMultiplier);
 
     // 10. Fire toast with fun fact
     const world = World.create(urlSlug, { credentials });
@@ -127,6 +165,10 @@ export const handlePickupItem = async (req: Request, res: Response) => {
       matchesIdealMeal,
       xpEarned,
       funFact: foodDef.funFact,
+      wasMystery,
+      hotStreakActive: wasHotStreak ? false : (matchesIdealMeal && (currentIdealStreak + 1) >= 3),
+      idealPickupStreak: wasHotStreak ? 0 : (matchesIdealMeal ? currentIdealStreak + 1 : 0),
+      xpMultiplier,
     });
   } catch (error) {
     return errorHandler({

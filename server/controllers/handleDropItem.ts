@@ -45,15 +45,15 @@ export const handleDropItem = async (req: Request, res: Response) => {
         x: posX + offsetX,
         y: posY + offsetY,
       },
-      // B2: uniqueName encoding
-      uniqueName: `lunch-swap-food|${droppedItem.itemId}|${droppedItem.rarity}|${Date.now()}`,
+      // B2: uniqueName encoding (dropped items are never mystery)
+      uniqueName: `lunch-swap-food|${droppedItem.itemId}|${droppedItem.rarity}|${Date.now()}|0`,
       urlSlug,
       isInteractive: true,
       interactivePublicKey: credentials.interactivePublicKey,
     });
 
-    // 6. Update visitor data
-    await visitor.updateDataObject({ brownBag: updatedBag });
+    // 6. Update visitor data (reset idealPickupStreak on drop)
+    await visitor.updateDataObject({ brownBag: updatedBag, idealPickupStreak: 0 });
 
     // B12: Atomic counter increments
     if (visitor.incrementDataObjectValue) {

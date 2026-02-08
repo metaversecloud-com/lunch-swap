@@ -27,7 +27,7 @@ export const handleSwapItem = async (req: Request, res: Response) => {
       return res.status(409).json({ success: false, message: "This item was already picked up" });
     }
 
-    // Parse uniqueName for item metadata (pattern: lunch-swap-food|{itemId}|{rarity}|{timestamp})
+    // Parse uniqueName for item metadata (pattern: lunch-swap-food|{itemId}|{rarity}|{timestamp}|{mystery})
     const parts = ((foodAsset as any).uniqueName || "").split("|");
     let pickupItemId = "";
     let pickupRarity: Rarity = "common";
@@ -39,6 +39,10 @@ export const handleSwapItem = async (req: Request, res: Response) => {
       pickupItemId = dataObj.itemId;
       pickupRarity = dataObj.rarity || "common";
     }
+
+    // Parse mystery flag from 5th segment (backward-compatible: default to "0")
+    const mysteryFlag = parts.length >= 5 ? parts[4] : "0";
+    const wasMystery = mysteryFlag === "1";
 
     const pickupFoodDef = FOOD_ITEMS_BY_ID.get(pickupItemId);
     if (!pickupFoodDef) {
@@ -74,7 +78,7 @@ export const handleSwapItem = async (req: Request, res: Response) => {
     const asset = await Asset.create("webImageAsset", { credentials });
     await DroppedAsset.drop(asset, {
       position: { x: posX + offsetX, y: posY + offsetY },
-      uniqueName: `lunch-swap-food|${droppedItem.itemId}|${droppedItem.rarity}|${Date.now()}`,
+      uniqueName: `lunch-swap-food|${droppedItem.itemId}|${droppedItem.rarity}|${Date.now()}|0`,
       urlSlug,
       isInteractive: true,
       interactivePublicKey: credentials.interactivePublicKey,

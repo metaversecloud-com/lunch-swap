@@ -12,6 +12,9 @@ export interface VisitorGameData {
   itemsMatchedToday: number;
   nutritionScore: number | null;
   superCombosFound: string[];
+  idealPickupStreak: number;
+  hotStreakActive: boolean;
+  dailyBuff: string | null;
 }
 
 export const VISITOR_DATA_DEFAULTS: VisitorGameData = {
@@ -25,6 +28,9 @@ export const VISITOR_DATA_DEFAULTS: VisitorGameData = {
   itemsMatchedToday: 0,
   nutritionScore: null,
   superCombosFound: [],
+  idealPickupStreak: 0,
+  hotStreakActive: false,
+  dailyBuff: null,
 };
 
 // --- User Data Object ---
@@ -104,6 +110,7 @@ export interface FoodItemAssetData {
   itemName: string;
   foodGroup: FoodGroup;
   rarity: Rarity;
+  isMystery: boolean;
   firstDroppedBy: string;
   firstDroppedByName: string;
   firstDroppedDateTime: string;
@@ -119,6 +126,7 @@ export const FOOD_ITEM_ASSET_DATA_DEFAULTS: FoodItemAssetData = {
   itemName: "",
   foodGroup: "snack",
   rarity: "common",
+  isMystery: false,
   firstDroppedBy: "",
   firstDroppedByName: "",
   firstDroppedDateTime: "",

@@ -50,7 +50,7 @@ export const handleGetGameState = async (req: Request, res: Response) => {
                   x: (droppedAsset.position?.x ?? 0) + offsetX,
                   y: (droppedAsset.position?.y ?? 0) + offsetY,
                 },
-                uniqueName: `lunch-swap-food|${bagItem.itemId}|${bagItem.rarity}|${Date.now()}`,
+                uniqueName: `lunch-swap-food|${bagItem.itemId}|${bagItem.rarity}|${Date.now()}|0`,
                 urlSlug,
                 isInteractive: true,
                 interactivePublicKey: credentials.interactivePublicKey,
@@ -87,13 +87,14 @@ export const handleGetGameState = async (req: Request, res: Response) => {
           try {
             const offsetX = (Math.random() - 0.5) * (worldData.spawnRadiusMax || 2000);
             const offsetY = (Math.random() - 0.5) * (worldData.spawnRadiusMax || 2000);
+            const mysteryFlag = Math.random() < 0.15 ? "1" : "0";
             const asset = await Asset.create("webImageAsset", { credentials });
             await DroppedAsset.drop(asset, {
               position: {
                 x: (droppedAsset.position?.x ?? 0) + offsetX,
                 y: (droppedAsset.position?.y ?? 0) + offsetY,
               },
-              uniqueName: `lunch-swap-food|${item.itemId}|${item.rarity}|${Date.now()}`,
+              uniqueName: `lunch-swap-food|${item.itemId}|${item.rarity}|${Date.now()}|${mysteryFlag}`,
               urlSlug,
               isInteractive: true,
               interactivePublicKey: credentials.interactivePublicKey,

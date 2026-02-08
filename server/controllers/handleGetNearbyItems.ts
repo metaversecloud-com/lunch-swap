@@ -55,6 +55,10 @@ export const handleGetNearbyItems = async (req: Request, res: Response) => {
         continue;
       }
 
+      // Parse mystery flag from 5th segment (backward-compatible: default to "0")
+      const mysteryFlag = parts.length >= 5 ? parts[4] : "0";
+      const isMystery = mysteryFlag === "1";
+
       // B3: Look up item details from food database (no fetchDataObject!)
       const foodDef = FOOD_ITEMS_BY_ID.get(itemId);
       if (!foodDef) continue;
@@ -71,13 +75,14 @@ export const handleGetNearbyItems = async (req: Request, res: Response) => {
 
       nearbyItems.push({
         droppedAssetId: asset.id || "",
-        itemId,
-        name: foodDef.name,
-        foodGroup: foodDef.foodGroup,
-        rarity: foodDef.rarity,
+        itemId: isMystery ? "mystery" : itemId,
+        name: isMystery ? "???" : foodDef.name,
+        foodGroup: foodDef.foodGroup, // Keep foodGroup as a hint even for mystery items
+        rarity: isMystery ? ("mystery" as any) : foodDef.rarity,
         distance: Math.round(distance),
-        matchesIdealMeal: idealItemIds.has(itemId),
+        matchesIdealMeal: isMystery ? false : idealItemIds.has(itemId),
         lastDroppedByName: "", // Would need data object; not critical for list view
+        isMystery,
       });
     }
 
