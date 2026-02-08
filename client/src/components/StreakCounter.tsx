@@ -39,6 +39,7 @@ export const StreakCounter = ({ currentStreak, longestStreak }: StreakCounterPro
   return (
     <div
       className="flex flex-col items-center gap-2"
+      role="status"
       aria-label={`Current streak: ${currentStreak} day${currentStreak !== 1 ? "s" : ""}${isNewRecord ? ", new record!" : ""}`}
     >
       <div className="flex items-center gap-2">

@@ -47,7 +47,7 @@ export const NutritionScoreDisplay = ({ score, breakdown, superCombos }: Nutriti
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Circular score ring */}
-      <div className="relative w-36 h-36" aria-label={`Nutrition score: ${clampedScore} out of 100, grade ${grade}`}>
+      <div className="relative w-36 h-36" role="img" aria-label={`Nutrition score: ${clampedScore} out of 100, grade ${grade}`}>
         <svg
           className="w-full h-full -rotate-90"
           viewBox="0 0 120 120"

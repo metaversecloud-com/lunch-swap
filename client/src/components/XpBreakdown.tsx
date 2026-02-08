@@ -43,7 +43,7 @@ export const XpBreakdown = ({ totalXp, nutritionScore, superCombosCount, current
   const itemTotal = lineItems.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="w-full max-w-xs mx-auto" aria-label="XP breakdown">
+    <div className="w-full max-w-xs mx-auto" role="region" aria-label="XP breakdown">
       <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wide mb-3 text-center">
         XP Earned
       </h3>

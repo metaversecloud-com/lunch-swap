@@ -28,7 +28,7 @@ export const NutritionPreview = ({ itemId }: NutritionPreviewProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-1.5 w-full" aria-label={`Nutrition info for ${item.name}`}>
+    <div className="flex flex-col gap-1.5 w-full" role="group" aria-label={`Nutrition info for ${item.name}`}>
       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nutrition</p>
       {NUTRITION_BARS.map(({ key, label, color, max }) => {
         const value = getValue(key);

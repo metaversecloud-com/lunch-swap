@@ -1,14 +1,26 @@
+import { useEffect, useRef } from "react";
+
 interface BonusWheelPromptProps {
   onSpin: () => void;
   onSkip: () => void;
 }
 
 export const BonusWheelPrompt = ({ onSpin, onSkip }: BonusWheelPromptProps) => {
+  const promptRef = useRef<HTMLDivElement>(null);
+  const spinRef = useRef<HTMLButtonElement>(null);
+
+  // Focus management: focus the primary action on mount
+  useEffect(() => {
+    spinRef.current?.focus();
+  }, []);
+
   return (
     <div
+      ref={promptRef}
       className="flex flex-col items-center justify-center gap-4 p-6 rounded-2xl mx-auto max-w-xs text-center"
       style={{ backgroundColor: "#FFF8E1", border: "3px solid #FFD700" }}
       role="dialog"
+      aria-modal="true"
       aria-labelledby="bonus-wheel-title"
       aria-describedby="bonus-wheel-description"
     >
@@ -35,6 +47,7 @@ export const BonusWheelPrompt = ({ onSpin, onSkip }: BonusWheelPromptProps) => {
 
       <div className="flex flex-col gap-2 w-full">
         <button
+          ref={spinRef}
           className="btn w-full text-base font-bold py-3 rounded-xl text-white"
           style={{
             backgroundColor: "#FF6B6B",
